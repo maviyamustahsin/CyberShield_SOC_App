@@ -4,6 +4,9 @@
   <img src="https://img.shields.io/badge/AI--Engine-RF--GBM%20Hybrid-orange.svg" alt="AI">
   <img src="https://img.shields.io/badge/Audit-Microsoft--Grade%20PDF-success.svg" alt="Audit">
   <br><br>
+  
+  ## 🌐 [LIVE DASHBOARD: cybershield-soc.streamlit.app](https://cybershield-soc.streamlit.app/)
+  
   <a href="https://cybershield-soc.streamlit.app/">
     <img src="https://static.streamlit.io/badges/streamlit_badge_black_white.svg" alt="Streamlit App">
   </a>
