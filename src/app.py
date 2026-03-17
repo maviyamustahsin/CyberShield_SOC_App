@@ -412,8 +412,22 @@ def load_engine():
 
 @st.cache_data
 def load_dataset():
-    df = pd.read_parquet(r"data/cleaned_dataset.parquet")
-    return df.sample(n=min(50000, len(df)), random_state=42).reset_index(drop=True)
+    try:
+        df = pd.read_parquet(r"data/cleaned_dataset.parquet")
+        return df.sample(n=min(50000, len(df)), random_state=42).reset_index(drop=True)
+    except Exception:
+        # Fallback: Generate synthetic data stream for Cloud Deployments (Since GitHub blocks 300MB files)
+        import joblib
+        import numpy as np
+        try:
+            features = joblib.load(os.path.join("models", "feature_names.pkl"))
+        except Exception:
+            features = [f"Feature_{i}" for i in range(78)]
+            
+        # Generate 1000 rows of synthetic traffic features
+        synthetic_data = np.random.randn(1000, len(features)) * 0.5
+        df_synthetic = pd.DataFrame(synthetic_data, columns=features)
+        return df_synthetic
 
 try:
     engine = load_engine()
