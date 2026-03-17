@@ -15,7 +15,7 @@ from fpdf import FPDF
 import io
 
 # PAGE CONFIG
-st.set_page_config(page_title="CyberShield SOC", page_icon="🛡️", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="CyberShield SOC App", page_icon="🛡️", layout="wide", initial_sidebar_state="expanded")
 
 # SESSION STATE DEFAULTS
 defaults = {

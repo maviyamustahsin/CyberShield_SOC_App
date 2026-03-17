@@ -11,7 +11,7 @@
     <img src="https://static.streamlit.io/badges/streamlit_badge_black_white.svg" alt="Streamlit App">
   </a>
 
-  <h1>🛡️ CyberShield SOC: Masterpiece Edition</h1>
+  <h1>🛡️ CyberShield SOC App: Masterpiece Edition</h1>
   <p><b>Executive AI-Driven Intrusion Mitigation & Neural Defense Platform</b></p>
 </div>
 
@@ -19,7 +19,7 @@
 
 ## 🚀 The Overview
 
-**CyberShield SOC** is a state-of-the-art, autonomous Security Operations Center designed for high-precision threat detection and mitigation. Built as a "Microsoft-grade" security asset, it combines ultra-fast machine learning inference with a breathtaking, glassmorphic terminal interface.
+**CyberShield SOC App** is a state-of-the-art, autonomous Security Operations Center designed for high-precision threat detection and mitigation. Built as a "Microsoft-grade" security asset, it combines ultra-fast machine learning inference with a breathtaking, glassmorphic terminal interface.
 
 This platform doesn't just "detect" threats—it analyzes, scores, and autonomously mitigates anomalies in a live simulated environment, providing a boardroom-ready view of network integrity.
 
@@ -44,7 +44,7 @@ This platform doesn't just "detect" threats—it analyzes, scores, and autonomou
 ### 1. Local Deployment
 ```bash
 # Clone the masterpiece
-git clone https://github.com/maviyamustahsin/CyberShield_SOC.git
+git clone https://github.com/maviyamustahsin/CyberShield_SOC_App.git
 
 # Install enterprise dependencies
 pip install -r requirements.txt
