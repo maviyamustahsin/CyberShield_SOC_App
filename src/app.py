@@ -372,12 +372,14 @@ st.markdown(f"""
     .alert-label {{ font-size: 0.75rem; color: {text_sub}; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }}
     .alert-value {{ font-size: 1.1rem; font-weight: 700; color: {text_main}; }}
     
-    /* Settings Panels */
+    /* Forms & Settings Cards */
     .settings-card {{
-        background: {card_bg};
+        background-color: {card_bg};
         border: 1px solid {card_border};
-        border-radius: 14px; padding: 24px 28px;
-        margin-bottom: 16px; transition: all 0.3s ease;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
         color: {text_main};
     }}
     .settings-card h3 {{
