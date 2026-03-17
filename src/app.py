@@ -10,7 +10,10 @@ import plotly.graph_objects as go
 import time
 import random
 from collections import deque
-from src.detection_engine import IntrusionDetectionEngine
+try:
+    from src.detection_engine import IntrusionDetectionEngine
+except ImportError:
+    from detection_engine import IntrusionDetectionEngine
 from fpdf import FPDF
 import io
 import joblib
@@ -21,6 +24,9 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(SCRIPT_DIR)
 MODELS_DIR = os.path.join(ROOT_DIR, "models")
 DATA_DIR = os.path.join(ROOT_DIR, "data")
+
+PATH_LITE = os.path.join(DATA_DIR, "cleaned_dataset.parquet")
+PATH_CLOUD = os.path.join(DATA_DIR, "cloud_demo_dataset.parquet")
 
 # PAGE CONFIG
 st.set_page_config(page_title="CyberShield SOC App", page_icon="🛡️", layout="wide", initial_sidebar_state="expanded")
@@ -480,19 +486,17 @@ def load_engine():
 
 def load_dataset():
     # Tier 1: Local Full Dataset (311MB)
-    path_lite = os.path.join(DATA_DIR, "cleaned_dataset.parquet")
-    if os.path.exists(path_lite):
+    if os.path.exists(PATH_LITE):
         try:
-            df = pd.read_parquet(path_lite)
+            df = pd.read_parquet(PATH_LITE)
             # Shuffle so attacks appear early
             return df.sample(frac=1, random_state=random.randint(1,1000)).reset_index(drop=True)
         except Exception: pass
 
     # Tier 2: Cloud Demo Dataset (71MB - REAL historical attack rows)
-    path_cloud = os.path.join(DATA_DIR, "cloud_demo_dataset.parquet")
-    if os.path.exists(path_cloud):
+    if os.path.exists(PATH_CLOUD):
         try:
-            df = pd.read_parquet(path_cloud)
+            df = pd.read_parquet(PATH_CLOUD)
             return df.sample(frac=1, random_state=random.randint(1,1000)).reset_index(drop=True)
         except Exception: pass
 
@@ -532,8 +536,12 @@ with st.sidebar:
         has_labels = 'Label' in df_test.columns or 'Label' in (df_test.iloc[0].to_dict().keys())
         st.write(f"**Engine Mode:** `{'Ground Truth' if has_labels else 'Synthetic'}`")
         if 'Label' in df_test.columns:
-            atk_count = (df_test['Label'] != 'BENIGN').sum()
+            atk_count = (df_test['Label'].astype(str).str.strip().str.upper() != 'BENIGN').sum()
             st.write(f"**Attack Rows:** `{atk_count:,}`")
+        
+        # Cloud FS Watcher
+        if os.path.exists(PATH_CLOUD): st.write("✅ **Cloud Dataset detected**")
+        else: st.write("⚠️ **Root dataset missing! Fallback active**")
     
     if st.button("➕ New Hunt Session", use_container_width=True):
         st.session_state.running = False
