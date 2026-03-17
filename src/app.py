@@ -2,7 +2,10 @@ import sys
 import os
 
 # Ensure the root project directory is in the Python path for Streamlit Cloud
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(SCRIPT_DIR)
+sys.path.append(ROOT_DIR)
+sys.path.append(SCRIPT_DIR)
 
 import streamlit as st
 import pandas as pd
@@ -528,7 +531,7 @@ except Exception as e:
 # SIDEBAR (Simplified)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 with st.sidebar:
-    st.markdown('<div style="display:flex; align-items:center; gap:10px; margin-bottom: 24px;"><span style="font-size:1.8rem;">🛡️</span><span style="font-weight:800; font-size:1.2rem; color:'+text_main+';">CyberShield v2.2 TITAN</span></div>', unsafe_allow_html=True)
+    st.markdown('<div style="display:flex; align-items:center; gap:10px; margin-bottom: 24px;"><span style="font-size:1.8rem;">🛡️</span><span style="font-weight:800; font-size:1.2rem; color:'+text_main+';">CyberShield v2.2.4 TITAN</span></div>', unsafe_allow_html=True)
     
     # Live Diagnostics
     with st.expander("🛠️ System Diagnostics", expanded=False):
@@ -538,6 +541,9 @@ with st.sidebar:
         if 'Label' in df_test.columns:
             atk_count = (df_test['Label'].astype(str).str.strip().str.upper() != 'BENIGN').sum()
             st.write(f"**Attack Rows:** `{atk_count:,}`")
+        elif 'FORCE_THREAT' in df_test.columns:
+            atk_count = df_test['FORCE_THREAT'].sum()
+            st.write(f"**Threat Rows (Synthetic):** `{atk_count:,}`")
         
         # Cloud FS Watcher
         if os.path.exists(PATH_CLOUD): st.write("✅ **Cloud Dataset detected**")
