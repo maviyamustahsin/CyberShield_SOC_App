@@ -131,31 +131,39 @@ st.markdown(f"""
         margin: auto;
     }}
 
-    /* Ghost Sidebar - Zero footprint for maximum mobile real estate */
+    /* Ghost Sidebar - Context-Aware: Only zero footprint when collapsed */
     [data-testid="stSidebar"] {{
         background-color: {bg_side} !important;
         border-right: none !important;
         box-shadow: none !important;
-        min-width: 330px !important;
-        max-width: 330px !important;
+        transition: all 0.3s ease !important;
     }}
-    /* FORCE everything related to the collapsed sidebar to be 'ghostly' */
-    [data-testid="stSidebarCollapsedControl"], 
-    section[data-testid="stSidebar"] > div {{
-        border-right: none !important;
-        box-shadow: none !important;
-        background: transparent !important;
-    }}
-    /* Ensure the main content can breathe right to the edge on mobile */
+    
+    /* When Sidebar is COLLAPSED on Mobile (Native Streamlit class) */
     @media (max-width: 768px) {{
-        [data-testid="stSidebar"] {{
+        [data-testid="stSidebar"][aria-expanded="false"] {{
             width: 0px !important;
             min-width: 0px !important;
+            visibility: hidden !important;
+        }}
+        /* When Sidebar is EXPANDED on Mobile */
+        [data-testid="stSidebar"][aria-expanded="true"] {{
+            width: 300px !important;
+            min-width: 300px !important;
+            visibility: visible !important;
+            background-color: {bg_side} !important;
+            z-index: 999999 !important;
         }}
         .block-container {{
             padding-left: 1rem !important;
             padding-right: 1rem !important;
         }}
+    }}
+
+    /* Specifically clean the collapsed arrow area */
+    [data-testid="stSidebarCollapsedControl"] {{
+        background-color: transparent !important;
+        border: none !important;
     }}
     .sidebar-history-item {{
         padding: 10px 14px; margin-bottom: 4px;
