@@ -131,7 +131,7 @@ st.markdown(f"""
         margin: auto;
     }}
 
-    /* Sidebar Styling - Borderless for Mobile Optimization */
+    /* Ghost Sidebar - Zero footprint for maximum mobile real estate */
     [data-testid="stSidebar"] {{
         background-color: {bg_side} !important;
         border-right: none !important;
@@ -139,9 +139,23 @@ st.markdown(f"""
         min-width: 330px !important;
         max-width: 330px !important;
     }}
-    /* Specifically hide any lingering sidebar border/line when collapsed */
-    [data-testid="stSidebarCollapsedControl"] {{
-        background-color: transparent !important;
+    /* FORCE everything related to the collapsed sidebar to be 'ghostly' */
+    [data-testid="stSidebarCollapsedControl"], 
+    section[data-testid="stSidebar"] > div {{
+        border-right: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+    }}
+    /* Ensure the main content can breathe right to the edge on mobile */
+    @media (max-width: 768px) {{
+        [data-testid="stSidebar"] {{
+            width: 0px !important;
+            min-width: 0px !important;
+        }}
+        .block-container {{
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }}
     }}
     .sidebar-history-item {{
         padding: 10px 14px; margin-bottom: 4px;
