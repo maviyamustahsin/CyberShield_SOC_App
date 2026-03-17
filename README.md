@@ -10,7 +10,7 @@
 
 ---
 
-## 🚀 The Masterpiece Overview
+## 🚀 The Overview
 
 **CyberShield SOC** is a state-of-the-art, autonomous Security Operations Center designed for high-precision threat detection and mitigation. Built as a "Microsoft-grade" security asset, it combines ultra-fast machine learning inference with a breathtaking, glassmorphic terminal interface.
 
