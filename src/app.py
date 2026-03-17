@@ -883,7 +883,7 @@ if st.session_state.current_page == "admin":
                 pdf.set_font("Arial", '', 6)
                 pdf.set_text_color(*C_LABEL)
                 pdf.cell(0, 3, "Microsoft-grade Digital Audit Compliance. Project Workspace Authentication: Verified.", 0, 1, 'C')
-                pdf.cell(0, 3, "CyberShield SOC Research Intelligence (c) 2026. Global Security Compliance Registry.", 0, 1, 'C')
+                pdf.cell(0, 3, "CyberShield SOC App Research Intelligence (c) 2026. Global Security Compliance Registry.", 0, 1, 'C')
                 
                 return pdf.output()
 
