@@ -351,6 +351,37 @@ st.markdown(f"""
         box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
     }}
 
+    /* Mobile Responsiveness & Scaling Fixes */
+    @media (max-width: 768px) {{
+        .main-header {{ 
+            flex-direction: column; 
+            align-items: flex-start; 
+            gap: 12px; 
+            padding: 10px 0;
+        }}
+        .header-right {{ 
+            margin-left: 0; 
+            width: 100%; 
+            justify-content: flex-start;
+        }}
+        .main-header-text h1 {{ font-size: 1.25rem !important; }}
+        .main-header-text p {{ font-size: 0.75rem !important; }}
+        .mission-marquee {{ font-size: 0.6rem !important; padding: 4px 10px; }}
+        .kpi-value {{ font-size: 1.7rem !important; }}
+        .kpi-label {{ font-size: 0.65rem !important; letter-spacing: 0.8px; }}
+        .kpi-card {{ padding: 16px !important; }}
+        .block-container {{ padding: 1rem 0.5rem !important; }}
+        
+        /* Scale down the Elite Scorecard on mobile */
+        .header-right > div {{
+            padding: 10px 16px !important;
+            gap: 12px !important;
+            width: 100%;
+        }}
+        .header-right div[style*="font-size: 2.22rem"] {{ font-size: 1.6rem !important; }}
+        .header-right div[style*="min-width: 140px"] {{ min-width: 100px !important; padding-left: 12px !important; }}
+    }}
+
     .stSelectbox label, .stSlider label, .stRadio label, .stToggle label {{
         color: {text_main} !important;
         font-weight: 600 !important;
