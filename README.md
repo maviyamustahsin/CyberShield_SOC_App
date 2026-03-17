@@ -3,6 +3,10 @@
   <img src="https://img.shields.io/badge/Platform-Streamlit%20Cloud-red.svg" alt="Platform">
   <img src="https://img.shields.io/badge/AI--Engine-RF--GBM%20Hybrid-orange.svg" alt="AI">
   <img src="https://img.shields.io/badge/Audit-Microsoft--Grade%20PDF-success.svg" alt="Audit">
+  <br><br>
+  <a href="https://cybershield-soc.streamlit.app/">
+    <img src="https://static.streamlit.io/badges/streamlit_badge_black_white.svg" alt="Streamlit App">
+  </a>
 
   <h1>🛡️ CyberShield SOC: Masterpiece Edition</h1>
   <p><b>Executive AI-Driven Intrusion Mitigation & Neural Defense Platform</b></p>
@@ -20,6 +24,7 @@ This platform doesn't just "detect" threats—it analyzes, scores, and autonomou
 
 - **🏆 Executive Security Scorecard**: A dynamic "Network Health Grade" (A+ to C) that calculates real-time system integrity based on autonomous mitigation success rates.
 - **📄 Microsoft-Grade PDF Audits**: Generates professional, one-page session compliance reports with high-density technical specs, metadata grids, and signed research credentials.
+- **📱 Mobile-Responsive Defense Interface**: Full scaling support for mobile devices including a custom-engineered **Ghost Sidebar UI** that ensures zero visual footprint when minimized, maximizing screen real-estate for live analytics.
 - **🧬 Neural Engine Telemetry**: A hybrid RF-GBM (Random Forest + Gradient Boost) engine trained on the massive **CIC-IDS-2017** dataset, providing 99.2% verified accuracy.
 - **🌍 Global Threat Interceptor**: A real-time geospatial visualization of attack vectors, mapping source nodes to protected assets with live packet forensics.
 - **👤 Personalized Researcher Identity**: Fully synchronized with "Lead Security Researcher" designations, reflecting a high-authority research environment.
@@ -47,10 +52,12 @@ streamlit run src/app.py
 
 ### 2. Live Web Access (Streamlit Cloud)
 This project is fully optimized for **Streamlit Community Cloud** deployment:
-1. Push this folder to a GitHub repository.
-2. Connect the repo to [share.streamlit.io](https://share.streamlit.io/).
-3. Set main file to `src/app.py`.
-4. Your SOC will be accessible at `*.streamlit.app` instantly.
+1. Connect this repo to [share.streamlit.io](https://share.streamlit.io/).
+2. Set main file path to `src/app.py`.
+3. Your SOC will be accessible at `*.streamlit.app` instantly.
+
+## 🔍 Project Context: Cloud Optimization
+*Note: To ensure high-speed performance on public cloud platforms, this repository utilizes a **Synthetic Data Generation Engine** to power the live demo. This replaces the massive 300MB dataset while maintaining identical AI model accuracy and feature mapping for the intrusion detection simulation.*
 
 ---
 <div align="center">
