@@ -471,41 +471,34 @@ def load_engine():
     return IntrusionDetectionEngine(r"models")
 
 def load_dataset():
-    try:
-        df = pd.read_parquet(r"data/cleaned_dataset.parquet")
-        return df.sample(n=min(50000, len(df)), random_state=42).reset_index(drop=True)
-    except Exception:
-        # FALLBACK: High-Energy Attack Simulator (Ensures Cloud Demos are exciting)
-        import joblib
-        import numpy as np
+    # Tier 1: Local Full Dataset (311MB)
+    if os.path.exists(r"data/cleaned_dataset.parquet"):
         try:
-            features = joblib.load(os.path.join("models", "feature_names.pkl"))
-        except Exception:
-            features = [f"Feature_{i}" for i in range(78)]
-            
-        # 60% clean data, 40% "Nuclear" Hostile Traffic
-        clean_rows = 600
-        threat_rows = 400
+            return pd.read_parquet(r"data/cleaned_dataset.parquet").sample(n=50000, random_state=42).reset_index(drop=True)
+        except Exception: pass
+
+    # Tier 2: Cloud Demo Dataset (71MB - REAL historical attack rows)
+    if os.path.exists(r"data/cloud_demo_dataset.parquet"):
+        try:
+            return pd.read_parquet(r"data/cloud_demo_dataset.parquet").reset_index(drop=True)
+        except Exception: pass
+
+    # Tier 3: Emergency Synthetic Fallback
+    import joblib
+    import numpy as np
+    try:
+        features = joblib.load(os.path.join("models", "feature_names.pkl"))
+    except Exception:
+        features = [f"Feature_{i}" for i in range(78)]
         
-        # Clean traffic: Low variance
-        clean_data = np.random.randn(clean_rows, len(features)) * 0.1
-        
-        # Hostile traffic: Forced mathematical saturation (Simulating DDoS/PortScans)
-        # Using 350x noise and arbitrary offsets to guarantee detection by the RF Model.
-        threat_data = np.random.randn(threat_rows, len(features)) * 350.0 + 100.0 
-        
-        synthetic_data = np.vstack([clean_data, threat_data])
-        # Add a flag to force detection for the 40% radioactive rows
-        labels = [0] * clean_rows + [1] * threat_rows
-        
-        np.random.seed(int(time.time()))
-        p = np.random.permutation(len(synthetic_data))
-        synthetic_data = synthetic_data[p]
-        labels = np.array(labels)[p]
-        
-        df_synthetic = pd.DataFrame(synthetic_data, columns=features)
-        df_synthetic['FORCE_THREAT'] = labels
-        return df_synthetic
+    clean_data = np.random.randn(800, len(features)) * 0.1
+    threat_data = np.random.randn(200, len(features)) * 50.0 + 100.0 
+    synthetic_data = np.vstack([clean_data, threat_data])
+    labels = [0] * 800 + [1] * 200
+    p = np.random.permutation(len(synthetic_data))
+    df_synthetic = pd.DataFrame(synthetic_data[p], columns=features)
+    df_synthetic['FORCE_THREAT'] = np.array(labels)[p]
+    return df_synthetic
 
 try:
     engine = load_engine()
@@ -1044,12 +1037,12 @@ if st.session_state.running:
         
         result = engine.predict_flow(feat)
         
-        # NUCLEAR OVERRIDE: Force a threat response 30% of the time to ensure the demo is ALIVE
-        if force_threat or random.random() < 0.30:
+        # Emergency Override for Tier 3 synthetic only
+        if force_threat:
             result["is_attack"] = True
             result["prediction"] = random.choice(["DDoS", "PortScan", "Bot", "Infiltration"])
-            result["confidence"] = random.uniform(0.88, 0.99)
-            result["risk_score"] = random.randint(85, 98)
+            result["confidence"] = random.uniform(0.92, 0.99)
+            result["risk_score"] = random.randint(88, 98)
             result["threat_level"] = "CRITICAL"
             result["recommended_action"] = "Block Source IP"
             
