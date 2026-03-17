@@ -1,9 +1,14 @@
+import sys
+import os
+
+# Ensure the root project directory is in the Python path for Streamlit Cloud
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 import time
 import random
-import os
 from collections import deque
 from src.detection_engine import IntrusionDetectionEngine
 from fpdf import FPDF
