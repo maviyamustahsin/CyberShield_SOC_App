@@ -36,7 +36,7 @@ This platform doesn't just "detect" threats—it analyzes, scores, and autonomou
 ### 1. Local Deployment
 ```bash
 # Clone the masterpiece
-git clone https://github.com/your-username/cybershield-soc.git
+git clone https://github.com/maviyamustahsin/CyberShield_SOC.git
 
 # Install enterprise dependencies
 pip install -r requirements.txt
