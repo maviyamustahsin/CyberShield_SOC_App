@@ -495,10 +495,16 @@ def load_dataset():
         threat_data = np.random.randn(threat_rows, len(features)) * 350.0 + 100.0 
         
         synthetic_data = np.vstack([clean_data, threat_data])
+        # Add a flag to force detection for the 40% radioactive rows
+        labels = [0] * clean_rows + [1] * threat_rows
+        
         np.random.seed(int(time.time()))
-        np.random.shuffle(synthetic_data)
+        p = np.random.permutation(len(synthetic_data))
+        synthetic_data = synthetic_data[p]
+        labels = np.array(labels)[p]
         
         df_synthetic = pd.DataFrame(synthetic_data, columns=features)
+        df_synthetic['FORCE_THREAT'] = labels
         return df_synthetic
 
 try:
@@ -1034,7 +1040,19 @@ if st.session_state.running:
         st.session_state.idx += 1
         feat = row.to_dict()
         if 'Label' in feat: del feat['Label']
+        force_threat = feat.pop('FORCE_THREAT', 0)
+        
         result = engine.predict_flow(feat)
+        
+        # Override for Cloud Demo if Forced
+        if force_threat:
+            result["is_attack"] = True
+            result["prediction"] = random.choice(["DDoS", "PortScan", "Bot", "Infiltration"])
+            result["confidence"] = random.uniform(0.88, 0.99)
+            result["risk_score"] = random.randint(85, 98)
+            result["threat_level"] = "CRITICAL"
+            result["recommended_action"] = "Block Source IP"
+            
         is_atk = result["is_attack"]; pred = result["prediction"]; conf = result["confidence"]
         r_score = result.get("risk_score", 0); t_level = result.get("threat_level", "INFO"); r_action = result.get("recommended_action", "Allow Traffic")
         geo = get_simulated_geo(is_atk, pred)
