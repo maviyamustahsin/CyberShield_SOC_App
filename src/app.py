@@ -485,7 +485,17 @@ def load_dataset():
             features = [f"Feature_{i}" for i in range(78)]
             
         # Generate 1000 rows of synthetic traffic features
-        synthetic_data = np.random.randn(1000, len(features)) * 0.5
+        # 85% clean data, 15% aggressive high-variance noise (to ensure 'threats' trigger in the AI)
+        clean_rows = 850
+        threat_rows = 150
+        
+        clean_data = np.random.randn(clean_rows, len(features)) * 0.2
+        threat_data = np.random.randn(threat_rows, len(features)) * 8.0 # High impact noise to trigger AI anomalies
+        
+        synthetic_data = np.vstack([clean_data, threat_data])
+        np.random.seed(42)
+        np.random.shuffle(synthetic_data)
+        
         df_synthetic = pd.DataFrame(synthetic_data, columns=features)
         return df_synthetic
 
