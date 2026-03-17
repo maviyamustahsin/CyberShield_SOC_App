@@ -470,13 +470,12 @@ st.markdown(f"""
 def load_engine():
     return IntrusionDetectionEngine(r"models")
 
-@st.cache_data
 def load_dataset():
     try:
         df = pd.read_parquet(r"data/cleaned_dataset.parquet")
         return df.sample(n=min(50000, len(df)), random_state=42).reset_index(drop=True)
     except Exception:
-        # Fallback: Generate synthetic data stream for Cloud Deployments (Since GitHub blocks 300MB files)
+        # FALLBACK: High-Energy Attack Simulator (Ensures Cloud Demos are exciting)
         import joblib
         import numpy as np
         try:
@@ -484,16 +483,19 @@ def load_dataset():
         except Exception:
             features = [f"Feature_{i}" for i in range(78)]
             
-        # Generate 1000 rows of synthetic traffic features
-        # 85% clean data, 15% aggressive high-variance noise (to ensure 'threats' trigger in the AI)
-        clean_rows = 850
-        threat_rows = 150
+        # 60% clean data, 40% "Nuclear" Hostile Traffic
+        clean_rows = 600
+        threat_rows = 400
         
-        clean_data = np.random.randn(clean_rows, len(features)) * 0.2
-        threat_data = np.random.randn(threat_rows, len(features)) * 50.0 # EXTREME impact noise to guarantee AI anomalies
+        # Clean traffic: Low variance
+        clean_data = np.random.randn(clean_rows, len(features)) * 0.1
+        
+        # Hostile traffic: Forced mathematical saturation (Simulating DDoS/PortScans)
+        # Using 350x noise and arbitrary offsets to guarantee detection by the RF Model.
+        threat_data = np.random.randn(threat_rows, len(features)) * 350.0 + 100.0 
         
         synthetic_data = np.vstack([clean_data, threat_data])
-        np.random.seed(42)
+        np.random.seed(int(time.time()))
         np.random.shuffle(synthetic_data)
         
         df_synthetic = pd.DataFrame(synthetic_data, columns=features)
