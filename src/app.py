@@ -490,7 +490,7 @@ def load_dataset():
         threat_rows = 150
         
         clean_data = np.random.randn(clean_rows, len(features)) * 0.2
-        threat_data = np.random.randn(threat_rows, len(features)) * 8.0 # High impact noise to trigger AI anomalies
+        threat_data = np.random.randn(threat_rows, len(features)) * 50.0 # EXTREME impact noise to guarantee AI anomalies
         
         synthetic_data = np.vstack([clean_data, threat_data])
         np.random.seed(42)
