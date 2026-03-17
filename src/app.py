@@ -131,12 +131,17 @@ st.markdown(f"""
         margin: auto;
     }}
 
-    /* Sidebar Styling */
+    /* Sidebar Styling - Borderless for Mobile Optimization */
     [data-testid="stSidebar"] {{
         background-color: {bg_side} !important;
-        border-right: 1px solid {card_border} !important;
+        border-right: none !important;
+        box-shadow: none !important;
         min-width: 330px !important;
         max-width: 330px !important;
+    }}
+    /* Specifically hide any lingering sidebar border/line when collapsed */
+    [data-testid="stSidebarCollapsedControl"] {{
+        background-color: transparent !important;
     }}
     .sidebar-history-item {{
         padding: 10px 14px; margin-bottom: 4px;
