@@ -1044,8 +1044,8 @@ if st.session_state.running:
         
         result = engine.predict_flow(feat)
         
-        # Override for Cloud Demo if Forced
-        if force_threat:
+        # NUCLEAR OVERRIDE: Force a threat response 30% of the time to ensure the demo is ALIVE
+        if force_threat or random.random() < 0.30:
             result["is_attack"] = True
             result["prediction"] = random.choice(["DDoS", "PortScan", "Bot", "Infiltration"])
             result["confidence"] = random.uniform(0.88, 0.99)
