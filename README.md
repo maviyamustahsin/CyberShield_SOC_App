@@ -63,14 +63,14 @@ graph TD
     G -->|Sync| H[Global Status Board]
 ```
 
-## 🧠 Engineering Deep Dive (Recruiter Intel)
+## 🧠 The "Smart" Side of CyberShield (How it works)
 
-This platform was engineered to solve the primary bottleneck in modern Security Operations: **Human Latency**. 
+We built this project to solve a simple problem: **Humans are too slow to stop hackers.** Here is how we made the system smarter:
 
-*   ⚡ **24ms Real-Time Inference**: Optimized the AI pipeline to ensure near-zero latency, critical for preventing zero-day exploits.
-*   ⚔️ **Autonomous Threat Mitigation**: Developed an active "Segmentation Filter" that autonomously halts malicious connections once a 0.85 risk threshold is met.
-*   📊 **Operational Integrity**: Implemented a calibrated **60/40 traffic ratio (Safe vs. Threat)** to rigorously test model generalization and minimize false-positive fatigue.
-*   🧬 **Hybrid AI Engine**: Utilizes a two-stage **RF-GBM Ensemble** trained on 78 flow features, delivering far greater resilience than single-model architectures.
+*   ⚡ **Lightning Fast (24ms)**: The AI makes a decision in just **24 milliseconds**. That’s faster than a human can blink, allowing it to stop attacks before they even start.
+*   ⚔️ **No Human Needed**: Most systems just "alert" you. Ours **actually blocks** the attacker automatically if it's 85% sure they are malicious.
+*   📊 **Real-World Balance**: We tested the system using a **60% Safe / 40% Threat** traffic mix. This ensures the AI is smart enough to let the good traffic in while keeping the bad guys out.
+*   🧬 **Double-Brain AI**: We don't use just one AI model; we use **two working together** (a Hybrid Ensemble). This makes our detection much more accurate than standard security tools.
 
 ## ⚙️ Deployment & Start-up
 
