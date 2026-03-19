@@ -1,11 +1,90 @@
 import sys
 import os
 
-# Ensure the root project directory is in the Python path for Streamlit Cloud
+# Path Injector (Ensures Streamlit Cloud can find all modules)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(SCRIPT_DIR)
-sys.path.append(ROOT_DIR)
-sys.path.append(SCRIPT_DIR)
+if ROOT_DIR not in sys.path:
+    sys.path.insert(0, ROOT_DIR)
+if SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, SCRIPT_DIR)
+
+import streamlit as st
+import pandas as pd
+import plotly.graph_objects as go
+import time
+import random
+from collections import deque
+try:
+    from src.detection_engine import IntrusionDetectionEngine
+except ImportError:
+    from detection_engine import IntrusionDetectionEngine
+from fpdf import FPDF
+import io
+import joblib
+import numpy as np
+
+# Path Configuration (Safe for Cloud & Local)
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(SCRIPT_DIR)
+MODELS_DIR = os.path.join(BASE_DIR, "models")
+DATA_DIR = os.path.join(BASE_DIR, "data")
+LOGO_PATH = os.path.join(SCRIPT_DIR, "logo.png")
+
+PATH_LITE = os.path.join(DATA_DIR, "cleaned_dataset.parquet")
+PATH_CLOUD = os.path.join(DATA_DIR, "cloud_demo_dataset.parquet")
+
+# PAGE CONFIG
+st.set_page_config(page_title="CyberShield SOC App", page_icon="🛡️", layout="wide", initial_sidebar_state="expanded")
+
+# SESSION STATE DEFAULTS
+defaults = {
+    "running": False,
+    "metrics": {"Total":0,"Normal":0,"Attacks":0,"Blocked":0},
+    "logs": deque(maxlen=12),
+    "timeline": {"t":[],"n":[],"a":[]},
+    "arcs": [],
+    "hex": [], # Initialized later
+    "idx": 0,
+    "last_alert": None,
+    "current_page": "dashboard",
+    # Settings
+    "app_theme": "Dark",
+    "anomaly_threshold": 0.85,
+    "risk_threshold": 80,
+    "auto_block": True,
+    "capture_interface": "eth0 (Primary)",
+    "subnet_mask": "192.168.1.0/24",
+    "syslog_ip": "",
+    "refresh_speed": 0.4,
+    "detail_level": "Balanced",
+    # Admin Profile Data
+    "admin_name": "Maviya",
+    "admin_email": "maviya@cybershield.local",
+    "admin_role": "Senior Security Analyst",
+    "admin_clearance": "Level 5 (Ring 0)",
+    "admin_joined": "Oct 12, 2025",
+    "admin_avatar": "👤",
+    "audit_logs": [
+        {"t": "2026-03-17 21:12", "a": "System threshold adjusted (0.85 -> 0.90)"},
+        {"t": "2026-03-17 20:45", "a": "Exported Weekly Threat Report (PDF)"},
+        {"t": "2026-03-17 19:30", "a": "Manual override on source 10.0.0.45"},
+        {"t": "2026-03-17 18:15", "a": "Security Operator Session Initialized"},
+    ],
+}
+for k, v in defaults.items():
+    if k not in st.session_state:
+        st.session_state[k] = v
+import sys
+import os
+
+# Path Injector (Ensures Streamlit Cloud can find all modules)
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(SCRIPT_DIR)
+if ROOT_DIR not in sys.path:
+    sys.path.insert(0, ROOT_DIR)
+if SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, SCRIPT_DIR)
 
 import streamlit as st
 import pandas as pd
@@ -79,39 +158,35 @@ import time
 import random
 
 # Debug Mode (Show detailed errors on screen)
-try:
-    if "session_id" not in st.session_state:
-        st.session_state.session_id = str(uuid.uuid4())
-        st.session_state.idx = 0
+if "session_id" not in st.session_state:
+    st.session_state.session_id = str(uuid.uuid4())
+    st.session_state.idx = 0
 
-    def log_audit(action):
-        st.session_state.audit_logs.insert(0, {"t": time.strftime("%Y-%m-%d %H:%M"), "a": action})
-        if len(st.session_state.audit_logs) > 20:
-            st.session_state.audit_logs.pop()
+def log_audit(action):
+    st.session_state.audit_logs.insert(0, {"t": time.strftime("%Y-%m-%d %H:%M"), "a": action})
+    if len(st.session_state.audit_logs) > 20:
+        st.session_state.audit_logs.pop()
 
-    def gen_hex(is_attack, atype):
-        lines = []
-        for i in range(10):
-            addr = f"{i*8:04X}"
-            if is_attack and random.random() > 0.4:
-                raw = [random.randint(0x80,0xFF) for _ in range(8)]
-                ascii_r = "".join(["." if b>126 or b<32 else chr(b) for b in raw])
-                if "SQL" in atype: ascii_r = "'OR 1=1--"[:8]
-                if "XSS" in atype: ascii_r = "<script>"
-                danger = True
-            else:
-                raw = [random.randint(0x20,0x7E) for _ in range(8)]
-                ascii_r = "".join([chr(b) for b in raw])
-                danger = False
-            hx = " ".join(f"{b:02X}" for b in raw)
-            lines.append({"a": addr, "h": hx, "s": ascii_r, "d": danger})
-        return lines
+def gen_hex(is_attack, atype):
+    lines = []
+    for i in range(10):
+        addr = f"{i*8:04X}"
+        if is_attack and random.random() > 0.4:
+            raw = [random.randint(0x80,0xFF) for _ in range(8)]
+            ascii_r = "".join(["." if b>126 or b<32 else chr(b) for b in raw])
+            if "SQL" in atype: ascii_r = "'OR 1=1--"[:8]
+            if "XSS" in atype: ascii_r = "<script>"
+            danger = True
+        else:
+            raw = [random.randint(0x20,0x7E) for _ in range(8)]
+            ascii_r = "".join([chr(b) for b in raw])
+            danger = False
+        hx = " ".join(f"{b:02X}" for b in raw)
+        lines.append({"a": addr, "h": hx, "s": ascii_r, "d": danger})
+    return lines
 
-    if not st.session_state.get("hex"):
-        st.session_state.hex = gen_hex(False, "")
-except Exception as e:
-    st.error(f"An initialization error occurred: {e}")
-    st.stop()
+if not st.session_state.get("hex"):
+    st.session_state.hex = gen_hex(False, "")
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # THEME ENGINE & DYNAMIC CSS
@@ -547,12 +622,8 @@ def get_soc_data_cloud():
     df['FORCE_THREAT'] = np.array(labels)[p]
     return df
 
-try:
-    engine = load_engine()
-    df_test = get_soc_data_cloud()
-except Exception as e:
-    st.error(f"Error loading AI Engine: {e}")
-    st.stop()
+engine = load_engine()
+df_test = get_soc_data_cloud()
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # SIDEBAR (Simplified)
@@ -1143,9 +1214,3 @@ if st.session_state.running:
     # Slight pause for visual stability then trigger rerun
     time.sleep(0.05) 
     st.rerun()
-
-except Exception as e:
-    st.error('?? MASTERPIECE COMPLIANCE ERROR: Neural Engine Initialization Failure')
-    st.info('The server encountered an issue loading an asset or dependency. Technical details below:')
-    st.exception(e)
-    st.stop()
