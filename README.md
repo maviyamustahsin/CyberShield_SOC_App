@@ -5,7 +5,6 @@ colorFrom: blue
 colorTo: indigo
 sdk: streamlit
 app_file: src/app.py
-pinned: true
 ---
 
 <div align="center">
