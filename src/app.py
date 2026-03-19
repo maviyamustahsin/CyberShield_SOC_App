@@ -74,31 +74,44 @@ for k, v in defaults.items():
     if k not in st.session_state:
         st.session_state[k] = v
 
-def log_audit(action):
-    st.session_state.audit_logs.insert(0, {"t": time.strftime("%Y-%m-%d %H:%M"), "a": action})
-    if len(st.session_state.audit_logs) > 20:
-        st.session_state.audit_logs.pop()
+import uuid
+import time
+import random
 
-def gen_hex(is_attack, atype):
-    lines = []
-    for i in range(10):
-        addr = f"{i*8:04X}"
-        if is_attack and random.random() > 0.4:
-            raw = [random.randint(0x80,0xFF) for _ in range(8)]
-            ascii_r = "".join(["." if b>126 or b<32 else chr(b) for b in raw])
-            if "SQL" in atype: ascii_r = "'OR 1=1--"[:8]
-            if "XSS" in atype: ascii_r = "<script>"
-            danger = True
-        else:
-            raw = [random.randint(0x20,0x7E) for _ in range(8)]
-            ascii_r = "".join([chr(b) for b in raw])
-            danger = False
-        hx = " ".join(f"{b:02X}" for b in raw)
-        lines.append({"a": addr, "h": hx, "s": ascii_r, "d": danger})
-    return lines
+# Debug Mode (Show detailed errors on screen)
+try:
+    if "session_id" not in st.session_state:
+        st.session_state.session_id = str(uuid.uuid4())
+        st.session_state.idx = 0
 
-if not st.session_state.hex:
-    st.session_state.hex = gen_hex(False, "")
+    def log_audit(action):
+        st.session_state.audit_logs.insert(0, {"t": time.strftime("%Y-%m-%d %H:%M"), "a": action})
+        if len(st.session_state.audit_logs) > 20:
+            st.session_state.audit_logs.pop()
+
+    def gen_hex(is_attack, atype):
+        lines = []
+        for i in range(10):
+            addr = f"{i*8:04X}"
+            if is_attack and random.random() > 0.4:
+                raw = [random.randint(0x80,0xFF) for _ in range(8)]
+                ascii_r = "".join(["." if b>126 or b<32 else chr(b) for b in raw])
+                if "SQL" in atype: ascii_r = "'OR 1=1--"[:8]
+                if "XSS" in atype: ascii_r = "<script>"
+                danger = True
+            else:
+                raw = [random.randint(0x20,0x7E) for _ in range(8)]
+                ascii_r = "".join([chr(b) for b in raw])
+                danger = False
+            hx = " ".join(f"{b:02X}" for b in raw)
+            lines.append({"a": addr, "h": hx, "s": ascii_r, "d": danger})
+        return lines
+
+    if not st.session_state.get("hex"):
+        st.session_state.hex = gen_hex(False, "")
+except Exception as e:
+    st.error(f"An initialization error occurred: {e}")
+    st.stop()
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # THEME ENGINE & DYNAMIC CSS
@@ -1130,3 +1143,9 @@ if st.session_state.running:
     # Slight pause for visual stability then trigger rerun
     time.sleep(0.05) 
     st.rerun()
+
+except Exception as e:
+    st.error('?? MASTERPIECE COMPLIANCE ERROR: Neural Engine Initialization Failure')
+    st.info('The server encountered an issue loading an asset or dependency. Technical details below:')
+    st.exception(e)
+    st.stop()
