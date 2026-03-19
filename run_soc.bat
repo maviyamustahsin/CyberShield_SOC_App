@@ -1,10 +1,13 @@
 @echo off
-setlocal
 cd /d "%~dp0"
-echo 🛡️ Initializing Maviya's CyberShield SOC App Defense System...
-powershell -ExecutionPolicy Bypass -File "run_soc.ps1"
-if %ERRORLEVEL% neq 0 (
-    echo.
-    echo ❌ The script failed to run.
-    pause
-)
+echo 🛡️ [SYSTEM] Starting CyberShield SOC TITAN v2.3.0...
+echo ⏳ Please wait, optimizing AI data cache...
+echo.
+
+set PYTHONPATH=%~dp0
+.\venv\Scripts\python.exe -m streamlit run src\app.py --server.port 8503
+
+echo.
+echo 🚨 [CRITICAL] The SOC Defense System has stopped.
+echo 🚨 If you see an importerror above, please tell me!
+pause
