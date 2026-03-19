@@ -22,11 +22,12 @@ import io
 import joblib
 import numpy as np
 
-# ROBUST PATHING SYSTEM
+# Path Configuration (Safe for Cloud & Local)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-ROOT_DIR = os.path.dirname(SCRIPT_DIR)
-MODELS_DIR = os.path.join(ROOT_DIR, "models")
-DATA_DIR = os.path.join(ROOT_DIR, "data")
+BASE_DIR = os.path.dirname(SCRIPT_DIR)
+MODELS_DIR = os.path.join(BASE_DIR, "models")
+DATA_DIR = os.path.join(BASE_DIR, "data")
+LOGO_PATH = os.path.join(SCRIPT_DIR, "logo.png")
 
 PATH_LITE = os.path.join(DATA_DIR, "cleaned_dataset.parquet")
 PATH_CLOUD = os.path.join(DATA_DIR, "cloud_demo_dataset.parquet")
@@ -494,8 +495,8 @@ st.markdown(f"""
 def load_engine():
     return IntrusionDetectionEngine(MODELS_DIR)
 
-@st.cache_data(show_spinner="⏳ Hard-Syncing Global Threat Datasets v4...", ttl=3600)
-def get_soc_data_final():
+@st.cache_data(show_spinner="⏳ Hard-Syncing Global Threat Datasets v5 (TITAN)...", ttl=3600)
+def get_soc_data_cloud():
     def balance_df(df):
         col = 'Label' if 'Label' in df.columns else ('FORCE_THREAT' if 'FORCE_THREAT' in df.columns else None)
         if not col: return df.sample(n=min(len(df), 1000), random_state=42).reset_index(drop=True)
@@ -535,7 +536,7 @@ def get_soc_data_final():
 
 try:
     engine = load_engine()
-    df_test = get_soc_data_final()
+    df_test = get_soc_data_cloud()
 except Exception as e:
     st.error(f"Error loading AI Engine: {e}")
     st.stop()
