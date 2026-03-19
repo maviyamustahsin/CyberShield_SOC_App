@@ -508,9 +508,9 @@ def load_dataset():
                 df_benign = df[benign_mask]
                 df_attack = df[~benign_mask]
                 
-                # Sample with replacement if necessary or just a fixed subset
+                # ACTION-PACKED RATIO: 65% Benign / 35% Threat
                 n_benign = min(len(df_benign), 5000)
-                n_attack = min(len(df_attack), int(n_benign * 0.25)) # 20% ratio
+                n_attack = min(len(df_attack), int(n_benign * 0.538)) # 35/65 ratio
                 
                 df_balanced = pd.concat([
                     df_benign.sample(n=n_benign, random_state=42),
@@ -556,7 +556,7 @@ except Exception as e:
 # SIDEBAR (Simplified)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 with st.sidebar:
-    st.markdown('<div style="display:flex; align-items:center; gap:10px; margin-bottom: 24px;"><span style="font-size:1.8rem;">🛡️</span><span style="font-weight:800; font-size:1.2rem; color:'+text_main+';">CyberShield v2.2.5 TITAN (Balanced)</span></div>', unsafe_allow_html=True)
+    st.markdown('<div style="display:flex; align-items:center; gap:10px; margin-bottom: 24px;"><span style="font-size:1.8rem;">🛡️</span><span style="font-weight:800; font-size:1.2rem; color:'+text_main+';">CyberShield v2.3.0 TITAN (Action-Packed)</span></div>', unsafe_allow_html=True)
     
     # Live Diagnostics
     with st.expander("🛠️ System Diagnostics", expanded=False):
