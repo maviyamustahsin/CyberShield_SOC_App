@@ -18,7 +18,7 @@ pinned: true
   <img src="https://img.shields.io/badge/Status-Operational-brightgreen" alt="Status">
   <br><br>
   
-  ## 🌐 [LIVE DASHBOARD: Hugging Face Edition](https://huggingface.co/spaces/maviyamustahsin/cybershield-soc-app)
+  ## 🌐 [DASHBOARD (Hugging Face)](https://huggingface.co/spaces/maviyamustahsin/cybershield-soc-app) | [DASHBOARD (Streamlit)](https://cybershield-soc.streamlit.app/)
   
   <a href="https://huggingface.co/spaces/maviyamustahsin/cybershield-soc-app">
     <img src="https://static.streamlit.io/badges/streamlit_badge_black_white.svg" alt="Streamlit App">
