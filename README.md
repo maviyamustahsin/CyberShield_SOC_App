@@ -18,10 +18,16 @@ pinned: true
   <img src="https://img.shields.io/badge/Status-Operational-brightgreen" alt="Status">
   <br><br>
   
-  ## 🌐 [DASHBOARD (Hugging Face)](https://huggingface.co/spaces/maviyamustahsin/cybershield-soc-app) | [DASHBOARD (Streamlit)](https://cybershield-soc.streamlit.app/)
+  <h1>🚀 <a href="https://huggingface.co/spaces/maviyamustahsin/cybershield-soc-app">LIVE DASHBOARD (Hugging Face)</a></h1>
+  <p><i>The premium, high-speed mobile & desktop experience.</i></p>
+  
+  <br>
   
   <a href="https://huggingface.co/spaces/maviyamustahsin/cybershield-soc-app">
-    <img src="https://static.streamlit.io/badges/streamlit_badge_black_white.svg" alt="Streamlit App">
+    <img src="https://img.shields.io/badge/Main--Dashboard-Hugging%20Face-black?style=for-the-badge&logo=huggingface" alt="Hugging Face">
+  </a>
+  <a href="https://cybershield-soc.streamlit.app/">
+    <img src="https://img.shields.io/badge/Secondary--Mirror-Streamlit-red?style=flat-square&logo=streamlit" alt="Streamlit Cloud">
   </a>
 
   <h1>🛡️ CyberShield SOC App: TITAN Edition</h1>
