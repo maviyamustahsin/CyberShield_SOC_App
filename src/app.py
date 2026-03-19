@@ -411,10 +411,17 @@ st.markdown(f"""
         .main-header-text h1 {{ font-size: 1.25rem !important; }}
         .main-header-text p {{ font-size: 0.75rem !important; }}
         .mission-marquee {{ font-size: 0.6rem !important; padding: 4px 10px; }}
-        .kpi-value {{ font-size: 1.7rem !important; }}
-        .kpi-label {{ font-size: 0.65rem !important; letter-spacing: 0.8px; }}
-        .kpi-card {{ padding: 16px !important; }}
-        .block-container {{ padding: 1rem 0.5rem !important; }}
+        .kpi-value {{ font-size: 1.6rem !important; }}
+        .kpi-label {{ font-size: 0.6rem !important; letter-spacing: 0.8px; }}
+        .kpi-card {{ padding: 12px !important; margin-bottom: 10px !important; }}
+        .block-container {{ padding: 0.5rem 0.5rem !important; }}
+        /* Disable heavy effects on low-power phones to prevent white screens */
+        * {{ 
+            backdrop-filter: none !important; 
+            -webkit-backdrop-filter: none !important; 
+            box-shadow: none !important; 
+        }}
+    }}
         
         /* Scale down the Elite Scorecard on mobile */
         .header-right > div {{
@@ -487,6 +494,7 @@ st.markdown(f"""
 def load_engine():
     return IntrusionDetectionEngine(MODELS_DIR)
 
+@st.cache_data(show_spinner="⏳ Loading Global Threat Datasets (311MB)...", ttl=3600)
 def load_dataset():
     # Tier 1: Local Full Dataset (311MB)
     if os.path.exists(PATH_LITE):
