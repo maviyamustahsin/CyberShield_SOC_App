@@ -500,7 +500,24 @@ def load_dataset():
     if os.path.exists(PATH_LITE):
         try:
             df = pd.read_parquet(PATH_LITE)
-            # Shuffle so attacks appear early
+            # BALANCED SAMPLING: Aim for ~80% Safe, ~20% Threats for a more professional feel
+            col = 'Label' if 'Label' in df.columns else ('FORCE_THREAT' if 'FORCE_THREAT' in df.columns else None)
+            if col:
+                # Identify Benign vs Attacks
+                benign_mask = df[col].astype(str).str.strip().str.upper() == 'BENIGN' if col == 'Label' else df[col] == 0
+                df_benign = df[benign_mask]
+                df_attack = df[~benign_mask]
+                
+                # Sample with replacement if necessary or just a fixed subset
+                n_benign = min(len(df_benign), 5000)
+                n_attack = min(len(df_attack), int(n_benign * 0.25)) # 20% ratio
+                
+                df_balanced = pd.concat([
+                    df_benign.sample(n=n_benign, random_state=42),
+                    df_attack.sample(n=n_attack, random_state=42)
+                ]).sample(frac=1, random_state=random.randint(1,1000)).reset_index(drop=True)
+                return df_balanced
+            
             return df.sample(frac=1, random_state=random.randint(1,1000)).reset_index(drop=True)
         except Exception: pass
 
@@ -539,7 +556,7 @@ except Exception as e:
 # SIDEBAR (Simplified)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 with st.sidebar:
-    st.markdown('<div style="display:flex; align-items:center; gap:10px; margin-bottom: 24px;"><span style="font-size:1.8rem;">🛡️</span><span style="font-weight:800; font-size:1.2rem; color:'+text_main+';">CyberShield v2.2.4 TITAN</span></div>', unsafe_allow_html=True)
+    st.markdown('<div style="display:flex; align-items:center; gap:10px; margin-bottom: 24px;"><span style="font-size:1.8rem;">🛡️</span><span style="font-weight:800; font-size:1.2rem; color:'+text_main+';">CyberShield v2.2.5 TITAN (Balanced)</span></div>', unsafe_allow_html=True)
     
     # Live Diagnostics
     with st.expander("🛠️ System Diagnostics", expanded=False):
